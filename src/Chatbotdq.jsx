@@ -98,8 +98,7 @@ export default function Chatbot() {
         },
       ];
     } else if (
-      option === "Yes, I am under 65" ||
-      option === "No, I am over 65"
+      option === "Yes, I am under 65"
     ) {
       botResponses = [
         {
@@ -108,16 +107,65 @@ export default function Chatbot() {
           options: ["Yes ", "No "],
         },
       ];
+    }else if (
+      option === "No, I am over 65"
+    ) {
+      botResponses = [
+        {
+          text: "Unfortunately, you don’t qualify for this Spending Allowance.",
+          sender: "bot",
+        },
+        {
+          text: "BUT, based on what you’ve told me, I see you qualify for a Food Allowance Card worth thousands of dollars!",
+          sender: "bot",
+        },
+        {
+          text: "Are you interested in claiming it?",
+          sender: "bot",
+          options: [" Yes", " No"],
+        },
+      ];
     }
     else if (option === "Yes " || option === "No ") {
       botResponses = [
         {
           text: "Are you on Medicare or Medicaid?",
           sender: "bot",
-          options: ["Yes", "No"],
+          options: ["  Yes", "No"],
         },
       ];
-    }else if (option === "Yes" || option === "No") {
+    }else if (option === " Yes") {
+      botResponses = [
+        {
+          text: "Great, I’ve qualified you for the Food Allowance Card, worth thousands of dollars a year.",
+          sender: "bot",
+        },
+        {
+          text: "This card can be used at all grocery & medical store across United States.",
+          sender: "bot",
+        },
+      ];
+      setTimeout(() => {
+        setFinalMessage(true);
+      }, 4000);
+    }
+    else if (option === "  Yes"){
+      botResponses = [
+        {
+          text: "Sorry you don’t qualify",
+          sender: "bot",
+        },
+      ];
+    }
+    else if (option === " No"){
+      botResponses = [
+        {
+          text: "Sorry you don’t qualify",
+          sender: "bot",
+        },
+      ];
+    }
+    else if (option === "Yes" || option === "No") {
       botResponses = [
         {
           text: "🎉 Fantastic news! You're one step away from securing your benefit",
