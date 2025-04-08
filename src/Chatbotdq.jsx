@@ -20,6 +20,7 @@ export default function Chatbot() {
   const [showInput, setShowInput] = useState(false);
   const [currentOptions, setCurrentOptions] = useState([]);
   const [finalMessage, setFinalMessage] = useState(false);
+  const [switchNumber, setSwitchNumber] = useState(false);
   const messagesEndRef = useRef(null);
 
   const getFormattedTime = (timeString) => {
@@ -145,6 +146,7 @@ export default function Chatbot() {
           sender: "bot",
         },
       ];
+      setSwitchNumber(true);
       setTimeout(() => {
         setFinalMessage(true);
       }, 4000);
@@ -348,7 +350,7 @@ export default function Chatbot() {
             ))}
           </div>
         )}
-        {finalMessage && <CallToActiondq finalMessage={finalMessage} />}
+        {finalMessage && <CallToActiondq finalMessage={finalMessage} switchNumber={switchNumber}/>}
 
         <div ref={messagesEndRef} />
       </div>
