@@ -94,7 +94,7 @@ export default function Chatbot() {
         {
           text: "Are you under the age of 65?",
           sender: "bot",
-          options: ["Yes! I am over 18 years old", "No"],
+          options: ["Yes", "No"],
         },
       ];
     } else if (
