@@ -112,7 +112,7 @@ export default function Chatbot() {
     else if (option === "Yes " || option === "No ") {
       botResponses = [
         {
-          text: "Are you on Medicare or Medicaid",
+          text: "Are you on Medicare or Medicaid?",
           sender: "bot",
           options: ["Yes", "No"],
         },
