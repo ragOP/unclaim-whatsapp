@@ -11,7 +11,7 @@ import {
   Send,
   SendHorizontalIcon,
 } from "lucide-react";
-import CallToAction from "./components/CallToAction";
+import CallSimple from "./components/CallSimple";
 
 export default function Chatbot() {
   const [messages, setMessages] = useState([]);
@@ -299,7 +299,7 @@ export default function Chatbot() {
             ))}
           </div>
         )}
-        {finalMessage && <CallToAction finalMessage={finalMessage} />}
+        {finalMessage && <CallSimple finalMessage={finalMessage} />}
 
         <div ref={messagesEndRef} />
       </div>
