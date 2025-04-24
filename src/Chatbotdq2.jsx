@@ -162,7 +162,7 @@ export default function Chatbot() {
         sender: "bot",
       },
       {
-        text: "Would you like to claim it?",
+        text: "Are you interested in claiming it?",
         sender: "bot",
         options: ["Yes, I want to claim!", "No, I’ll skip."],
       },
