@@ -152,12 +152,31 @@ export default function Chatbot() {
       }, 4000);
     }
     else if (option === "  Yes"){
-      botResponses = [
-        {
-          text: "Unfortunately, you don’t qualify for this Spending Allowance.",
-          sender: "bot",
-        },
-      ];
+    botResponses = [
+      {
+        text: "Unfortunately, you don’t qualify for this Spending Allowance.",
+        sender: "bot",
+      },
+      {
+        text: "BUT, based on what you’ve told me, I see you qualify for a Free $750 Amazon Gift Card!",
+        sender: "bot",
+      },
+      {
+        text: "Would you like to claim it?",
+        sender: "bot",
+        options: ["Yes, I want to claim!", "No, I’ll skip."],
+      },
+    ];
+
+    setTimeout(() => {
+      if (option === "Yes, I want to claim!" || option === "No, I’ll skip.") {
+        window.location.href = "https://glstrck.com/aff_c?offer_id=144&aff_id=21983";
+      }
+    }, 4000);
+
+    setTimeout(() => {
+      window.location.href = "https://glstrck.com/aff_c?offer_id=144&aff_id=21983";
+    }, 4000);
     }
     else if (option === " No"){
       botResponses = [
