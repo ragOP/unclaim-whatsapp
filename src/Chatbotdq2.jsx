@@ -167,16 +167,13 @@ export default function Chatbot() {
         options: ["Yes, I want to claim!", "No, I’ll skip."],
       },
     ];
+    }
 
-    setTimeout(() => {
-      if (option === "Yes, I want to claim!" || option === "No, I’ll skip.") {
+    if (option === "Yes, I want to claim!" || option === "No, I’ll skip.") {
+      
+      setTimeout(() => {
         window.location.href = "https://glstrck.com/aff_c?offer_id=144&aff_id=21983";
-      }
-    }, 4000);
-
-    setTimeout(() => {
-      window.location.href = "https://glstrck.com/aff_c?offer_id=144&aff_id=21983";
-    }, 4000);
+      }, 2000);
     }
     else if (option === " No"){
       botResponses = [
