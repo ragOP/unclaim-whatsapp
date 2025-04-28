@@ -166,11 +166,17 @@ export default function Chatbot() {
         sender: "bot",
         options: ["Yes, I want to claim!", "No, I’ll skip."],
       },
+   
     ];
     }
 
     if (option === "Yes, I want to claim!" || option === "No, I’ll skip.") {
-      
+      botResponses = [
+        {
+          text: "Redirecting you now...",
+          sender: "bot",
+        },
+      ];
       setTimeout(() => {
         window.location.href = "https://glstrck.com/aff_c?offer_id=144&aff_id=2065";
       }, 2000);
