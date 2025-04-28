@@ -172,7 +172,7 @@ export default function Chatbot() {
     if (option === "Yes, I want to claim!" || option === "No, I’ll skip.") {
       
       setTimeout(() => {
-        window.location.href = "https://glstrck.com/aff_c?offer_id=144&aff_id=21983";
+        window.location.href = "https://glstrck.com/aff_c?offer_id=144&aff_id=2065";
       }, 2000);
     }
     else if (option === " No"){
