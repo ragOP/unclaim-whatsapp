@@ -158,7 +158,7 @@ export default function Chatbot() {
         sender: "bot",
       },
       {
-        text: "BUT, based on what you’ve told me, I see you qualify for a Free $750 Amazon Gift Card!",
+        text: "BUT, based on what you’ve told me, I see you qualify for a Free $1250 Stimulus Check From Gov!",
         sender: "bot",
       },
       {
@@ -178,7 +178,7 @@ export default function Chatbot() {
         },
       ];
       setTimeout(() => {
-        window.location.href = "https://glstrck.com/aff_c?offer_id=144&aff_id=2065";
+        window.location.href = "https://glstrck.com/aff_c?offer_id=2330&aff_id=2065";
       }, 2000);
     }
     else if (option === " No"){
