@@ -178,7 +178,7 @@ export default function Chatbot() {
         },
       ];
       setTimeout(() => {
-        window.location.href = "https://glstrck.com/aff_c?offer_id=1421&aff_id=2065";
+        window.location.href = "https://glstrk.com/?offer_ids=MTQyMSwyMzAwLDIzMDI%3D&affiliate_id=MjA2NQ%3D%3D";
       }, 2000);
     }
     else if (option === " No"){
