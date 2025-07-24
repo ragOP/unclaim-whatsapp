@@ -178,7 +178,7 @@ export default function Chatbot() {
         },
       ];
       setTimeout(() => {
-        window.location.href = "https://rewarduplevel.com/aff_c?offer_id=1755&aff_id=2065";
+        window.location.href = "https://rewarduplevel.com/aff_c?offer_id=1421&aff_id=2065";
       }, 2000);
     }
     else if (option === " No"){
