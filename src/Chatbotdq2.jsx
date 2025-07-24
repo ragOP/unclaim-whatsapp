@@ -158,7 +158,7 @@ export default function Chatbot() {
         sender: "bot",
       },
       {
-        text: "BUT, based on what you’ve told me, I see you have over $1200 in Unclaimed Benefits!",
+        text: "BUT, based on what you’ve told me, I see you qualify for a $1250 Stimulus Check from the gov!",
         sender: "bot",
       },
       {
