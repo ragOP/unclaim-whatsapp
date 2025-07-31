@@ -35,8 +35,7 @@ const CallToAction2 = ({ finalMessage, switchNumber }) => {
         transition={{ delay: 0.2, duration: 0.6 }}
       >
         <p className="font-semibold">
-          Tap on the button below to make a quick call & that's it. You'll be
-          qualified on the call by a licensed agent in minutes 👇
+         Based on what you've told me, you’re eligible for the Free Health Coverage and $200/month Grocery Allowance Card!
         </p>
       </motion.div>
 
