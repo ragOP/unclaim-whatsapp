@@ -34,7 +34,7 @@ export default function Chatbot2() {
         sender: "bot",
       },
       {
-        text: "Emily this side. Let’s find out if you qualify for the $5800 Spending Allowance — it’s quick and only takes 2 minutes!",
+        text: "Emily this side. Let’s find out if you qualify for the Free Health Coverage and $200/month Grocery Allowance Card — it’s quick and only takes 2 minutes!",
         sender: "bot",
         time: new Date().toTimeString(),
       },
