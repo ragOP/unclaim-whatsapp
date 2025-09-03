@@ -18,7 +18,7 @@ const App = () => {
         {/* <Route path="/engsf1" element={<Chatbotdq />} />
         <Route path="/engsfdq" element={<Chatbotdq2 />} />
         <Route path="/engsf2200" element={<ChatbotTwo />} /> */}
-        <Route path="/engsf1dup" element={<Chatbotdq2 />} />
+        <Route path="/engmed1" element={<Chatbotdq2 />} />
         {/* <Route path="/engsf2200dup" element={<ChatbotFour />} />
         <Route path="/engsafe1" element={<Chatbot2 />} /> */}
       </Routes>
