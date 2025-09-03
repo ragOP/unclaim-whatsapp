@@ -11,7 +11,7 @@ import {
   Send,
   SendHorizontalIcon,
 } from "lucide-react";
-import CallToActiondq2 from "./components/CallToActiondq2";
+import CallToActiondq2 from "./components/cxz";
 
 export default function Chatbot() {
   const [messages, setMessages] = useState([]);
