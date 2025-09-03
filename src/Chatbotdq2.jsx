@@ -11,7 +11,7 @@ import {
   Send,
   SendHorizontalIcon,
 } from "lucide-react";
-import CallToActiondq2 from "./components/cxz";
+import CallToActiondq2 from "./components/CallToActiondq2";
 
 export default function Chatbot() {
   const [messages, setMessages] = useState([]);
@@ -99,7 +99,7 @@ export default function Chatbot() {
         },
       ];
     } else if (
-      option === "Yes, I'm over 64"
+      option === "Yes, I'm over 64" || option === "No, I'm under 65"
     ) {
       botResponses = [
         {
@@ -108,34 +108,7 @@ export default function Chatbot() {
           options: ["Yes ", "No "],
         },
       ];
-    }else if (
-      option === "No, I'm under 65"
-    ) {
-      botResponses = [
-        {
-          text: "Unfortunately, you don’t qualify for this Spending Allowance.",
-          sender: "bot",
-        },
-        {
-          text: "BUT, based on what you’ve told me, I see you qualify for a Food Allowance Card worth thousands of dollars!",
-          sender: "bot",
-        },
-        {
-          text: "Are you interested in claiming it?",
-          sender: "bot",
-          options: [" Yes", " No"],
-        },
-      ];
-    }
-    else if (option === "Yes " || option === "No ") {
-      botResponses = [
-        {
-          text: "Are you on Medicare or Medicaid?",
-          sender: "bot",
-          options: ["  Yes", "No"],
-        },
-      ];
-    }else if (option === " Yes") {
+    }else if (option === "Yes " || option === "No ") {
       botResponses = [
         {
           text: "Great, I’ve qualified you for the Food Allowance Card, worth thousands of dollars a year.",
