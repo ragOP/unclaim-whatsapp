@@ -34,7 +34,7 @@ export default function Chatbot() {
         sender: "bot",
       },
       {
-        text: "Emily this side. Let’s find out if you qualify for the $5800 Spending Allowance — it’s quick and only takes 2 minutes!",
+        text: "Emily this side. Let’s find out if you qualify for the Spending Allowance Worth Thousands — it’s quick and only takes 2 minutes!",
         sender: "bot",
         time: new Date().toTimeString(),
       },
@@ -93,13 +93,13 @@ export default function Chatbot() {
           sender: "bot",
         },
         {
-          text: "Are you under the age of 65?",
+          text: "Are you over the age of 64?",
           sender: "bot",
-          options: ["Yes, I am under 65", "No, I am over 65"],
+          options: ["Yes, I'm over 64", "No, I'm under 65"],
         },
       ];
     } else if (
-      option === "Yes, I am under 65"
+      option === "Yes, I'm over 64"
     ) {
       botResponses = [
         {
@@ -109,7 +109,7 @@ export default function Chatbot() {
         },
       ];
     }else if (
-      option === "No, I am over 65"
+      option === "No, I'm under 65"
     ) {
       botResponses = [
         {
@@ -196,7 +196,7 @@ export default function Chatbot() {
           sender: "bot",
         },
         {
-          text: "Based on what you've told me, you’re eligible for the $5800 Spending Allowance!",
+          text: "Based on what you've told me, you’re eligible for a Spending Allowance Worth Thousands!",
           sender: "bot",
         },
       ];
