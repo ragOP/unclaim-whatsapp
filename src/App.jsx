@@ -8,6 +8,7 @@ import Chatbotdq from './Chatbotdq';
 import Chatbotdq2 from './Chatbotdq2';
 import Home from './Home';
 import Chatbot2 from './Chatbot2';
+import Raghib from './Raghib';
 
 const App = () => {
   // sds
@@ -21,6 +22,7 @@ const App = () => {
         {/* <Route path="/thousands1" element={<Chatbotdq2 />} /> */}
         {/* <Route path="/engsf2200dup" element={<ChatbotFour />} />
         <Route path="/engsafe1" element={<Chatbot2 />} /> */}
+        <Route path="/raghib" element={<Raghib />} />
       </Routes>
     </Router>
   );
