@@ -20,7 +20,7 @@ export default function Chatbot() {
   const [showInput, setShowInput] = useState(false);
   const [currentOptions, setCurrentOptions] = useState([]);
   const [finalMessage, setFinalMessage] = useState(false);
-  const [switchNumber, setSwitchNumber] = useState(false);
+  const [switchNumber, setSwitchNumber] = useState(true);
   const [checkLink, setCheckLink] = useState(0);
   const [isunder65, setIsunder65] = useState(false);
   const messagesEndRef = useRef(null);
@@ -168,7 +168,7 @@ export default function Chatbot() {
             },
           ];
           if(isunder65){
-            setSwitchNumber(true);
+            setSwitchNumber(false);
           }
           setTimeout(() => {
             setFinalMessage(true);
