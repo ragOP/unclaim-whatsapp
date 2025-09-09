@@ -43,7 +43,7 @@ export default function Chatbot() {
       {
         text: "Tap 'Yes' to get started! ⬇️",
         sender: "bot",
-        options: ["👉 Yes! Show me how to claim!"],
+        options: ["👉 Yes, Help me qualify!"],
         time: new Date().toTimeString(),
       },
     ];
@@ -73,7 +73,7 @@ export default function Chatbot() {
   };
 
   const handleOptionClick = (option) => {
-    if (option === "👉 Yes! Show me how to claim!") {
+    if (option === "👉 Yes, Help me qualify!") {
       setMessages((prev) => [
         ...prev,
         { text: "Yes", sender: "user", time: new Date().toTimeString() },
@@ -88,10 +88,10 @@ export default function Chatbot() {
     setCurrentOptions([]);
     let botResponses = [];
 
-    if (option === "👉 Yes! Show me how to claim!") {
+    if (option === "👉 Yes, Help me qualify!") {
       botResponses = [
         {
-          text: "Awesome! Let's get you the benefit ASAP. I just need to ask you a couple of quick questions.",
+          text: "Awesome! Let's get you the benefits you deserve ASAP. I just need to ask you a couple of quick questions.",
           sender: "bot",
         },
         {
