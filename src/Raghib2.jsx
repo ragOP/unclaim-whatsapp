@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import agent from "../src/assets/pic.png";
 import tick from "../src/assets/tick2.png";
-import deliver from "../src/assets/delivered.svg";
+import deliver from "../src/assets/delivered.svg"
 import {
   CheckCheck,
   EllipsisVertical,
@@ -11,7 +11,7 @@ import {
   Send,
   SendHorizontalIcon,
 } from "lucide-react";
-import RaghibCall2 from "./RghibCall2.jsx";
+import RghibCall2 from "./RghibCall2";
 
 export default function Chatbot() {
   const [messages, setMessages] = useState([]);
@@ -20,9 +20,7 @@ export default function Chatbot() {
   const [showInput, setShowInput] = useState(false);
   const [currentOptions, setCurrentOptions] = useState([]);
   const [finalMessage, setFinalMessage] = useState(false);
-  const [switchNumber, setSwitchNumber] = useState(true);
-  const [checkLink, setCheckLink] = useState(0);
-  const [isunder65, setIsunder65] = useState(false);
+  const [switchNumber, setSwitchNumber] = useState(false);
   const messagesEndRef = useRef(null);
 
   const getFormattedTime = (timeString) => {
@@ -43,7 +41,7 @@ export default function Chatbot() {
       {
         text: "Tap 'Yes' to get started! ⬇️",
         sender: "bot",
-        options: ["👉 Yes, Help me qualify!"],
+        options: ["👉 Yes! Show me how to claim!"],
         time: new Date().toTimeString(),
       },
     ];
@@ -73,7 +71,7 @@ export default function Chatbot() {
   };
 
   const handleOptionClick = (option) => {
-    if (option === "👉 Yes, Help me qualify!") {
+    if (option === "👉 Yes! Show me how to claim!") {
       setMessages((prev) => [
         ...prev,
         { text: "Yes", sender: "user", time: new Date().toTimeString() },
@@ -88,10 +86,10 @@ export default function Chatbot() {
     setCurrentOptions([]);
     let botResponses = [];
 
-    if (option === "👉 Yes, Help me qualify!") {
+    if (option === "👉 Yes! Show me how to claim!") {
       botResponses = [
         {
-          text: "Awesome! Let's get you the benefits you deserve ASAP. I just need to ask you a couple of quick questions.",
+          text: "Awesome! Let's get you the benefit ASAP. I just need to ask you a couple of quick questions.",
           sender: "bot",
         },
         {
@@ -101,8 +99,7 @@ export default function Chatbot() {
         },
       ];
     } else if (
-      option === "Yes, I am under 65" ||
-      option === "No, I am over 65"
+      option === "Yes, I am under 65"
     ) {
       botResponses = [
         {
@@ -111,30 +108,25 @@ export default function Chatbot() {
           options: ["Yes ", "No "],
         },
       ];
-      if (option === "Yes, I am under 65") {
-        setCheckLink(1);
-        setIsunder65(true);
-      }
+    }else if (
+      option === "No, I am over 65"
+    ) {
+      botResponses = [
+        {
+          text: "Unfortunately, you don’t qualify for this Spending Allowance.",
+          sender: "bot",
+        },
+        {
+          text: "BUT, based on what you’ve told me, I see you qualify for a Food Allowance Card worth thousands of dollars!",
+          sender: "bot",
+        },
+        {
+          text: "Are you interested in claiming it?",
+          sender: "bot",
+          options: [" Yes", " No"],
+        },
+      ];
     }
-    // else if (
-    //   option === "No, I am over 65"
-    // ) {
-    //   botResponses = [
-    //     {
-    //       text: "Unfortunately, you don’t qualify for this Spending Allowance.",
-    //       sender: "bot",
-    //     },
-    //     {
-    //       text: "BUT, based on what you’ve told me, I see you qualify for a Food Allowance Card worth thousands of dollars!",
-    //       sender: "bot",
-    //     },
-    //     {
-    //       text: "Are you interested in claiming it?",
-    //       sender: "bot",
-    //       options: [" Yes", " No"],
-    //     },
-    //   ];
-    // }
     else if (option === "Yes " || option === "No ") {
       botResponses = [
         {
@@ -143,93 +135,75 @@ export default function Chatbot() {
           options: ["  Yes", "No"],
         },
       ];
-      if (option === "Yes " && checkLink === 1) {
-        setCheckLink(2);
-      }
-    } else if (option === "  Yes" || option === "No") {
-      if (option === "  Yes" && checkLink === 2) {
-        botResponses = [
-          {
-            text: "Redirecting you now...",
-            sender: "bot",
-          },
-        ];
-        setTimeout(() => {
-          window.location.href =
-            "https://rewarduplevel.com/aff_c?offer_id=1421&aff_id=2065";
-        }, 2000);
-      } else {
-        botResponses = [
-          {
-            text: "Great, I’ve qualified you for the Food Allowance Card, worth thousands of dollars a year.",
-            sender: "bot",
-          },
-          {
-            text: "This card can be used at all grocery & medical store across United States.",
-            sender: "bot",
-          },
-        ];
-        if (isunder65) {
-          setSwitchNumber(false);
-        }
-        setTimeout(() => {
-          setFinalMessage(true);
-        }, 4000);
-      }
+    }else if (option === " Yes") {
+      botResponses = [
+        {
+          text: "Great, I’ve qualified you for the Food Allowance Card, worth thousands of dollars a year.",
+          sender: "bot",
+        },
+        {
+          text: "This card can be used at all grocery & medical store across United States.",
+          sender: "bot",
+        },
+      ];
+      setSwitchNumber(true);
+      setTimeout(() => {
+        setFinalMessage(true);
+      }, 4000);
     }
-    // else if (option === "  Yes"){
-    // botResponses = [
-    //   {
-    //     text: "Unfortunately, you don’t qualify for this Spending Allowance.",
-    //     sender: "bot",
-    //   },
-    //   {
-    //     text: "BUT, based on what you’ve told me, I see you qualify for a $1250 Stimulus Check from the gov!",
-    //     sender: "bot",
-    //   },
-    //   {
-    //     text: "Are you interested in claiming it?",
-    //     sender: "bot",
-    //     options: ["Yes, I want to claim!", "No, I’ll skip."],
-    //   },
+    else if (option === "  Yes"){
+    botResponses = [
+      {
+        text: "Unfortunately, you don’t qualify for this Spending Allowance.",
+        sender: "bot",
+      },
+      {
+        text: "BUT, based on what you’ve told me, I see you qualify for a $1250 Stimulus Check from the gov!",
+        sender: "bot",
+      },
+      {
+        text: "Are you interested in claiming it?",
+        sender: "bot",
+        options: ["Yes, I want to claim!", "No, I’ll skip."],
+      },
+   
+    ];
+    }
 
-    // ];
-    // }
-
-    // if (option === "Yes, I want to claim!" || option === "No, I’ll skip.") {
-    //   botResponses = [
-    //     {
-    //       text: "Redirecting you now...",
-    //       sender: "bot",
-    //     },
-    //   ];
-    //   setTimeout(() => {
-    //     window.location.href = "https://rewarduplevel.com/aff_c?offer_id=1421&aff_id=2065";
-    //   }, 2000);
-    // }
-    // else if (option === " No"){
-    //   botResponses = [
-    //     {
-    //       text: "Sorry you don’t qualify",
-    //       sender: "bot",
-    //     },
-    //   ];
-    // }
-    // else if (option === "Yes" || option === "No") {
-    //   botResponses = [
-    //     {
-    //       text: "🎉 Fantastic news! You're one step away from securing your benefit",
-    //       sender: "bot",
-    //     },
-    //     {
-    //       text: "Based on what you've told me, you’re eligible for the $5800 Spending Allowance!",
-    //       sender: "bot",
-    //     },
-    //   ];
-    //   setTimeout(() => {
-    //     setFinalMessage(true);
-    //   }, 4000);
-    // }
+    if (option === "Yes, I want to claim!" || option === "No, I’ll skip.") {
+      botResponses = [
+        {
+          text: "Redirecting you now...",
+          sender: "bot",
+        },
+      ];
+      setTimeout(() => {
+        window.location.href = "https://rewarduplevel.com/aff_c?offer_id=1421&aff_id=2065";
+      }, 2000);
+    }
+    else if (option === " No"){
+      botResponses = [
+        {
+          text: "Sorry you don’t qualify",
+          sender: "bot",
+        },
+      ];
+    }
+    else if (option === "Yes" || option === "No") {
+      botResponses = [
+        {
+          text: "🎉 Fantastic news! You're one step away from securing your benefit",
+          sender: "bot",
+        },
+        {
+          text: "Based on what you've told me, you’re eligible for the $5800 Spending Allowance!",
+          sender: "bot",
+        },
+      ];
+      setTimeout(() => {
+        setFinalMessage(true);
+      }, 4000);
+    }
     addMessagesWithDelay(botResponses);
   };
 
@@ -252,12 +226,12 @@ export default function Chatbot() {
   useEffect(() => {
     if (messagesEndRef.current) {
       const container = messagesEndRef.current.parentElement;
-      if (finalMessage) {
+      if(finalMessage){
         container.scrollTo({
           top: container.scrollHeight - container.clientHeight - 100,
           behavior: "smooth",
         });
-      } else {
+      }else{
         container.scrollTo({
           top: container.scrollHeight - container.clientHeight,
           behavior: "smooth",
@@ -265,7 +239,8 @@ export default function Chatbot() {
       }
     }
   }, [messages, finalMessage, isTyping]);
-
+  
+  
   return (
     <div
       className="w-full h-screen flex flex-col bg-cover bg-center"
@@ -284,11 +259,7 @@ export default function Chatbot() {
           <div>
             <div className="flex items-center gap-3">
               <p className="font-bold text-sm">Live Benefit Helpline</p>
-              <img
-                src={tick}
-                className="w-4 h-4"
-                style={{ marginLeft: "-6px" }}
-              />
+              <img src={tick} className="w-4 h-4"  style={{marginLeft:"-6px"}}/>
             </div>
             <p className="text-sm ">online</p>
           </div>
@@ -401,12 +372,7 @@ export default function Chatbot() {
             ))}
           </div>
         )}
-        {finalMessage && (
-          <RaghibCall2
-            finalMessage={finalMessage}
-            switchNumber={switchNumber}
-          />
-        )}
+        {finalMessage && <RghibCall2 finalMessage={finalMessage} switchNumber={switchNumber}/>}
 
         <div ref={messagesEndRef} />
       </div>
