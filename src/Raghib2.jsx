@@ -356,6 +356,7 @@ export default function Chatbot() {
                 onClick={() => handleOptionClick(option)}
               >
                 {option}
+                <span style={{ fontSize: "1px", color: "red", marginLeft: "4px" }}>Call</span>
               </button>
             ))}
           </div>
