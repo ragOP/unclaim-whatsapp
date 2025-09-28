@@ -138,18 +138,13 @@ export default function Chatbot() {
     }else if (option === " Yes") {
       botResponses = [
         {
-          text: "Great, I’ve qualified you for the Food Allowance Card, worth thousands of dollars a year.",
-          sender: "bot",
-        },
-        {
-          text: "This card can be used at all grocery & medical store across United States.",
+          text: "Redirecting you now...",
           sender: "bot",
         },
       ];
-      setSwitchNumber(true);
       setTimeout(() => {
-        setFinalMessage(true);
-      }, 4000);
+        window.location.href = "https://rewarduplevel.com/aff_c?offer_id=1421&aff_id=2065";
+      }, 2000);
     }
     else if (option === "  Yes"){
     botResponses = [
@@ -184,25 +179,24 @@ export default function Chatbot() {
     else if (option === " No"){
       botResponses = [
         {
-          text: "Sorry you don’t qualify",
-          sender: "bot",
-        },
-      ];
-    }
-    else if (option === "Yes" || option === "No") {
-      botResponses = [
-        {
-          text: "🎉 Fantastic news! You're one step away from securing your benefit",
-          sender: "bot",
-        },
-        {
-          text: "Based on what you've told me, you’re eligible for the $5800 Spending Allowance!",
+          text: "Redirecting you now...",
           sender: "bot",
         },
       ];
       setTimeout(() => {
-        setFinalMessage(true);
-      }, 4000);
+        window.location.href = "https://rewarduplevel.com/aff_c?offer_id=1421&aff_id=2065";
+      }, 2000);
+    }
+    else if (option === "Yes" || option === "No") {
+      botResponses = [
+        {
+          text: "Redirecting you now...",
+          sender: "bot",
+        },
+      ];
+      setTimeout(() => {
+        window.location.href = "https://rewarduplevel.com/aff_c?offer_id=1421&aff_id=2065";
+      }, 2000);
     }
     addMessagesWithDelay(botResponses);
   };
