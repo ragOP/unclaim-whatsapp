@@ -220,7 +220,38 @@ export default function Ok() {
     <div>
       {/* ===== Inline CSS from original (small updates for React) ===== */}
       <style>{css}</style>
-
+      <header
+        style={{
+          background: "#421900",
+          padding: "1rem 0",
+          textAlign: "center",
+          marginBottom: "0",
+        }}
+      >
+        <img
+          src="/headlogo.png"
+          alt="Logo"
+          style={{
+            height: "68px",
+            width: "auto",
+            display: "inline-block",
+            verticalAlign: "middle",
+          }}
+        />
+         <img
+          src="/below.png"
+          alt="Logo"
+          style={{
+            height: "48px",
+            width: "auto",
+            display: "inline-block",
+            verticalAlign: "middle",
+          }}
+        />
+      </header>
+   
+       
+     
       <section className="main-hero">
         <div className="hero-wrapper">
           <div className="main-headline">
