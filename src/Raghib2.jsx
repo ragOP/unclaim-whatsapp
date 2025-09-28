@@ -190,13 +190,19 @@ export default function Chatbot() {
     else if (option === "Yes" || option === "No") {
       botResponses = [
         {
-          text: "Redirecting you now...",
+          text: "Unfortunately, you don’t qualify for this Spending Allowance.",
           sender: "bot",
         },
+        {
+          text: "BUT, based on what you’ve told me, I see you qualify for a Food Allowance Card worth thousands of dollars!",
+          sender: "bot",
+        },
+        {
+          text: "Are you interested in claiming it?",
+          sender: "bot",
+          options: [" Yes", " No"],
+        },
       ];
-      setTimeout(() => {
-        window.location.href = "https://rewarduplevel.com/aff_c?offer_id=1421&aff_id=2065";
-      }, 2000);
     }
     addMessagesWithDelay(botResponses);
   };
