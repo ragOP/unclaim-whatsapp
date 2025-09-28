@@ -218,7 +218,7 @@ export default function Ok() {
 
   return (
     <div>
-      {/* ===== Inline CSS from original (small updates for React) ===== */}
+    
       <style>{css}</style>
       <header
         style={{
@@ -234,24 +234,23 @@ export default function Ok() {
           style={{
             height: "68px",
             width: "auto",
-            display: "inline-block",
-            verticalAlign: "middle",
-          }}
-        />
-         <img
-          src="/below.png"
-          alt="Logo"
-          style={{
-            height: "48px",
-            width: "auto",
-            display: "inline-block",
+            display: "block",
+            margin: "0 auto",
             verticalAlign: "middle",
           }}
         />
       </header>
-   
-       
-     
+      <img
+        src="/below.png"
+        alt="Logo"
+        style={{
+          height: "48px",
+          width: "auto",
+          display: "block",
+          margin: "0 auto",
+        }}
+      />
+
       <section className="main-hero">
         <div className="hero-wrapper">
           <div className="main-headline">
@@ -269,7 +268,7 @@ export default function Ok() {
               </div>
             )}
 
-            {/* STEP 1 */}
+         
             {isActive(1) && (
               <div className="question-step active" id="step1">
                 <h3>Are you between 55 and 75 years old?</h3>
