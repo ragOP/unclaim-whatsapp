@@ -26,7 +26,8 @@ const App = () => {
         <Route path="/engsafe1" element={<Chatbot2 />} /> */}
         <Route path="/" element={<Raghib />} />
         <Route path="/raghib" element={<Raghib2 />} />
-        <Route path="/newdes1" element={<Ok/>}
+          <Route path="/newdes1" element={<Ok />} />
+      
       </Routes>
     </Router>
   );
