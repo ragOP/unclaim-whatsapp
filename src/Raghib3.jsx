@@ -113,11 +113,7 @@ export default function Chatbot() {
     ) {
       botResponses = [
         {
-          text: "Unfortunately, you don’t qualify for this Spending Allowance.",
-          sender: "bot",
-        },
-        {
-          text: "BUT, based on what you’ve told me, I see you qualify for a Food Allowance Card worth thousands of dollars!",
+          text: "Based on what you’ve told me, I see you qualify for a Food Allowance Card worth thousands of dollars!",
           sender: "bot",
         },
         {
@@ -138,27 +134,18 @@ export default function Chatbot() {
     }else if (option === " Yes") {
       botResponses = [
         {
-          text: "Great, I’ve qualified you for the Food Allowance Card, worth thousands of dollars a year.",
-          sender: "bot",
-        },
-        {
-          text: "This card can be used at all grocery & medical store across United States.",
+          text: "Redirecting you now...",
           sender: "bot",
         },
       ];
-      setSwitchNumber(true);
       setTimeout(() => {
-        setFinalMessage(true);
-      }, 4000);
+        window.location.href = "https://rewarduplevel.com/aff_c?offer_id=1421&aff_id=2065";
+      }, 2000);
     }
     else if (option === "  Yes"){
     botResponses = [
       {
-        text: "Unfortunately, you don’t qualify for this Spending Allowance.",
-        sender: "bot",
-      },
-      {
-        text: "BUT, based on what you’ve told me, I see you qualify for a $1250 Stimulus Check from the gov!",
+        text: "Based on what you’ve told me, I see you qualify for a $1250 Stimulus Check from the gov!",
         sender: "bot",
       },
       {
@@ -184,25 +171,26 @@ export default function Chatbot() {
     else if (option === " No"){
       botResponses = [
         {
-          text: "Sorry you don’t qualify",
-          sender: "bot",
-        },
-      ];
-    }
-    else if (option === "Yes" || option === "No") {
-      botResponses = [
-        {
-          text: "🎉 Fantastic news! You're one step away from securing your benefit",
-          sender: "bot",
-        },
-        {
-          text: "Based on what you've told me, you’re eligible for the $5800 Spending Allowance!",
+          text: "Redirecting you now...",
           sender: "bot",
         },
       ];
       setTimeout(() => {
-        setFinalMessage(true);
-      }, 4000);
+        window.location.href = "https://rewarduplevel.com/aff_c?offer_id=1421&aff_id=2065";
+      }, 2000);
+    }
+    else if (option === "Yes" || option === "No") {
+      botResponses = [
+        {
+          text: "Based on what you’ve told me, I see you qualify for a Food Allowance Card worth thousands of dollars!",
+          sender: "bot",
+        },
+        {
+          text: "Are you interested in claiming it?",
+          sender: "bot",
+          options: [" Yes", " No"],
+        },
+      ];
     }
     addMessagesWithDelay(botResponses);
   };
@@ -368,7 +356,7 @@ export default function Chatbot() {
                 onClick={() => handleOptionClick(option)}
               >
                 {option}
-                 <span style={{ fontSize: "1px", color: "red", marginLeft: "4px" }}>Call</span>
+                <span style={{ fontSize: "1px", color: "red", marginLeft: "4px" }}>Call</span>
               </button>
             ))}
           </div>
