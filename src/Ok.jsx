@@ -67,19 +67,9 @@ export default function Ok() {
   // ----------------
   // Step transitions
   // ----------------
-  const nextQuestion = (stepNumber, answer) => {
-    // Step 1 logic (age groups):
-    // Disqualify only if "Under 25"
+const nextQuestion = (stepNumber, answer) => {
+    // Step 1: always proceed to Step 2
     if (stepNumber === 1) {
-      if (answer === "under_25") {
-        setCurrentStep(5); // sorry
-        track("quiz_disqualified", {
-          event_category: "quiz",
-          event_label: "step_1_under_25",
-          value: 1,
-        });
-        return;
-      }
       setCurrentStep(2);
       track("quiz_progress", {
         event_category: "quiz",
@@ -89,19 +79,8 @@ export default function Ok() {
       return;
     }
 
-    // Step 2 logic (Medicare/Medicaid): disqualify on "no"
-    if (stepNumber === 2 && answer === "no") {
-      setCurrentStep(5); // sorry
-      track("quiz_disqualified", {
-        event_category: "quiz",
-        event_label: "step_2_no",
-        value: 2,
-      });
-      return;
-    }
-
-    // Normal progression
-    if (stepNumber === 2 && answer === "yes") {
+    // Step 2: always proceed to Step 3 (ignore yes/no)
+    if (stepNumber === 2) {
       setCurrentStep(3);
       track("quiz_progress", {
         event_category: "quiz",
@@ -111,10 +90,9 @@ export default function Ok() {
       return;
     }
 
+    // Step 3: always proceed to Loading -> Final
     if (stepNumber === 3) {
-      // Move to loading
       setCurrentStep(4);
-      // Hide progress bar during loader
       setShowProgress(false);
       startLoadingSequence();
       track("quiz_progress", {
