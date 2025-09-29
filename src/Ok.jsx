@@ -552,11 +552,11 @@ const nextQuestion = (stepNumber, answer) => {
         </div>
 
         <div className="footer-navigation">
-          <a href="https://savingshero.org/privacy.html">Privacy</a>
+          <a href="privacy.html">Privacy</a>
           <span className="footer-divider">|</span>
-          <a href="https://savingshero.org/terms.html">Terms</a>
+          <a href="terms.html">Terms</a>
           <span className="footer-divider">|</span>
-          <a href="https://savingshero.org/contact.html">Contact</a>
+          <a href="contact.html">Contact</a>
         </div>
 
         <div className="footer-copyright">© 2025 SavingsHero.org</div>
