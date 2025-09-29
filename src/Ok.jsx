@@ -322,7 +322,21 @@ export default function Ok() {
       <section className="main-hero">
         <div className="hero-wrapper">
           <div className="main-headline" style={{ marginTop: "-1.5rem" }}>
-            <h1>Americans Over 25 Can Qualify For A Spending Allowance Card Worth Thousands Annually!</h1>
+            <h1>
+              <span
+                style={{
+                  background: "#fff700",
+                  color: "#2c3e50",
+                  padding: "0.2em 0.4em",
+                  borderRadius: "4px",
+                  boxShadow: "0 2px 8px rgba(255, 247, 0, 0.12)",
+                  display: "inline-block",
+                }}
+              >
+                Americans Over 25
+              </span>{" "}
+              Can Qualify For A Spending Allowance Card Worth Thousands Annually!
+            </h1>
             <p>Answer basic questions below to see if you qualify</p>
           </div>
 
@@ -666,7 +680,7 @@ h1, h3, .countdown-timer, .phone-number { font-family: "Montserrat", sans-serif;
 }
 .progress-bar {
   width: 100%;
-  height: 6px;
+  height: 10px;
   background: var(--border);
   border-radius: 3px;
   margin-bottom: 2.5rem;
@@ -688,6 +702,7 @@ h1, h3, .countdown-timer, .phone-number { font-family: "Montserrat", sans-serif;
   color: var(--primary);
   text-align: center;
   line-height: 1.4;
+   margin-top: -22px;
 }
 
 .answer-options { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1rem; }
