@@ -7,6 +7,8 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
  * - State-driven steps & progress
  * - Timed loading animation + final CTA
  * - Safe gtag() calls (no errors if gtag is missing)
+ * - NEW: Dynamic state detection (IP-based) with ?state= override
+ * - NEW: Extra age options: 45–65 and 65+
  *
  * Usage:
  *   import Ok from "./Ok.jsx";
@@ -40,10 +42,12 @@ export default function Ok() {
   const [forecastHeights, setForecastHeights] = useState([22, 28, 34, 40]);
   const [futureTime, setFutureTime] = useState(getFutureTimeString(60)); // +1 hour
 
+  // NEW: Dynamic state detection
+  const [stateName, setStateName] = useState("your state");
+
   // Derived progress percentage (cap at 100 for sorry/final screens)
   const progressWidth = useMemo(() => {
-    const shownStep =
-      currentStep <= TOTAL_STEPS ? currentStep : TOTAL_STEPS; // clamp
+    const shownStep = currentStep <= TOTAL_STEPS ? currentStep : TOTAL_STEPS; // clamp
     return Math.round((shownStep / TOTAL_STEPS) * 100);
   }, [currentStep]);
 
@@ -52,7 +56,6 @@ export default function Ok() {
   // ------------
   const track = (event, params = {}) => {
     try {
-      // Only call if available
       if (typeof window !== "undefined" && typeof window.gtag === "function") {
         window.gtag("event", event, params);
       }
@@ -65,35 +68,61 @@ export default function Ok() {
   // Step transitions
   // ----------------
   const nextQuestion = (stepNumber, answer) => {
-    // If step 1 or 2 answered "no" → disqualify
-    if ((stepNumber === 1 || stepNumber === 2) && answer === "no") {
+    // Step 1 logic (age groups):
+    // Disqualify only if "Under 25"
+    if (stepNumber === 1) {
+      if (answer === "under_25") {
+        setCurrentStep(5); // sorry
+        track("quiz_disqualified", {
+          event_category: "quiz",
+          event_label: "step_1_under_25",
+          value: 1,
+        });
+        return;
+      }
+      setCurrentStep(2);
+      track("quiz_progress", {
+        event_category: "quiz",
+        event_label: "step_2",
+        value: 2,
+      });
+      return;
+    }
+
+    // Step 2 logic (Medicare/Medicaid): disqualify on "no"
+    if (stepNumber === 2 && answer === "no") {
       setCurrentStep(5); // sorry
       track("quiz_disqualified", {
         event_category: "quiz",
-        event_label: `step_${stepNumber}_no`,
-        value: stepNumber,
+        event_label: "step_2_no",
+        value: 2,
       });
       return;
     }
 
     // Normal progression
-    if (stepNumber < 3) {
-      setCurrentStep(stepNumber + 1);
-    } else {
+    if (stepNumber === 2 && answer === "yes") {
+      setCurrentStep(3);
+      track("quiz_progress", {
+        event_category: "quiz",
+        event_label: "step_3",
+        value: 3,
+      });
+      return;
+    }
+
+    if (stepNumber === 3) {
       // Move to loading
       setCurrentStep(4);
       // Hide progress bar during loader
       setShowProgress(false);
       startLoadingSequence();
+      track("quiz_progress", {
+        event_category: "quiz",
+        event_label: "step_4_loading",
+        value: 4,
+      });
     }
-
-    // Track progress
-    const next = Math.min(stepNumber + 1, 4);
-    track("quiz_progress", {
-      event_category: "quiz",
-      event_label: `step_${next}`,
-      value: next,
-    });
   };
 
   // ----------------------
@@ -176,12 +205,13 @@ export default function Ok() {
     };
     startForecastInterval();
 
+    // Dynamic state detection (runs once)
+    detectStateName();
+
     return () => {
       clearTimeout(agentTimer);
-      if (forecastIntervalRef.current)
-        clearInterval(forecastIntervalRef.current);
-      if (countdownIntervalRef.current)
-        clearInterval(countdownIntervalRef.current);
+      if (forecastIntervalRef.current) clearInterval(forecastIntervalRef.current);
+      if (countdownIntervalRef.current) clearInterval(countdownIntervalRef.current);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -211,6 +241,43 @@ export default function Ok() {
   };
 
   // ---------------
+  // Dynamic State
+  // ---------------
+  async function detectStateName() {
+    try {
+      // Query param override (?state=Texas)
+      if (typeof window !== "undefined") {
+        const params = new URLSearchParams(window.location.search);
+        const override = params.get("state") || params.get("st");
+        if (override && override.trim().length > 0) {
+          setStateName(cleanStateString(override));
+          return;
+        }
+      }
+
+      // Try ipapi.co first
+      const ipapi = await safeJsonFetch("https://ipapi.co/json/");
+      if (ipapi && (ipapi.region || ipapi.region_code)) {
+        // ipapi.region is full name (e.g., "California")
+        setStateName(ipapi.region || ipapi.region_code || "your state");
+        return;
+      }
+
+      // Fallback: ipinfo.io
+      const ipinfo = await safeJsonFetch("https://ipinfo.io/json?token=demo");
+      if (ipinfo && (ipinfo.region || ipinfo.country)) {
+        setStateName(ipinfo.region || ipinfo.country || "your state");
+        return;
+      }
+
+      // Last resort
+      setStateName("your state");
+    } catch {
+      setStateName("your state");
+    }
+  }
+
+  // ---------------
   // Render helpers
   // ---------------
   const isActive = (n) => currentStep === n;
@@ -218,12 +285,12 @@ export default function Ok() {
 
   return (
     <div>
-    
       <style>{css}</style>
+
       <header
         style={{
           background: "#421900",
-          padding: "1rem 0",
+          padding: "0.1rem 0",
           textAlign: "center",
           marginBottom: "0",
         }}
@@ -232,7 +299,7 @@ export default function Ok() {
           src="/headlogo.png"
           alt="Logo"
           style={{
-            height: "68px",
+            height: "55px",
             width: "auto",
             display: "block",
             margin: "0 auto",
@@ -240,6 +307,7 @@ export default function Ok() {
           }}
         />
       </header>
+
       <img
         src="/below.png"
         alt="Logo"
@@ -253,37 +321,35 @@ export default function Ok() {
 
       <section className="main-hero">
         <div className="hero-wrapper">
-          <div className="main-headline">
-            <h1>Americans Can Qualify for up to $50,000 in Final Expense Benefits</h1>
+          <div className="main-headline" style={{ marginTop: "-1.5rem" }}>
+            <h1>Americans Over 25 Can Qualify For A Spending Allowance Card Worth Thousands Annually!</h1>
             <p>Answer basic questions below to see if you qualify</p>
           </div>
 
           <div className="quiz-container">
             {showProgress && (
               <div className="progress-bar">
-                <div
-                  className="progress-fill"
-                  style={{ width: `${progressWidth}%` }}
-                />
+                <div className="progress-fill" style={{ width: `${progressWidth}%` }} />
               </div>
             )}
 
-         
+            {/* STEP 1 */}
             {isActive(1) && (
               <div className="question-step active" id="step1">
-                <h3>Are you between 55 and 75 years old?</h3>
+                <h3>1. Select Your Age Range:</h3>
                 <div className="answer-options">
-                  <button
-                    className="answer-btn"
-                    onClick={() => nextQuestion(1, "yes")}
-                  >
-                    Yes <span className="arrow">→</span>
+                  <button className="answer-btn" onClick={() => nextQuestion(1, "under_25")}>
+                    Under 25 <span className="arrow">→</span>
                   </button>
-                  <button
-                    className="answer-btn"
-                    onClick={() => nextQuestion(1, "no")}
-                  >
-                    No <span className="arrow">→</span>
+                  <button className="answer-btn" onClick={() => nextQuestion(1, "25_45")}>
+                    25–45 <span className="arrow">→</span>
+                  </button>
+                  {/* NEW OPTIONS */}
+                  <button className="answer-btn" onClick={() => nextQuestion(1, "45_65")}>
+                    45–65 <span className="arrow">→</span>
+                  </button>
+                  <button className="answer-btn" onClick={() => nextQuestion(1, "65_plus")}>
+                    65+ <span className="arrow">→</span>
                   </button>
                 </div>
               </div>
@@ -292,18 +358,12 @@ export default function Ok() {
             {/* STEP 2 */}
             {isActive(2) && (
               <div className="question-step active" id="step2">
-                <h3>Do you have an active bank checking account?</h3>
+                <h3>2. Are you on Medicare or Medicaid?</h3>
                 <div className="answer-options">
-                  <button
-                    className="answer-btn"
-                    onClick={() => nextQuestion(2, "yes")}
-                  >
+                  <button className="answer-btn" onClick={() => nextQuestion(2, "yes")}>
                     Yes <span className="arrow">→</span>
                   </button>
-                  <button
-                    className="answer-btn"
-                    onClick={() => nextQuestion(2, "no")}
-                  >
+                  <button className="answer-btn" onClick={() => nextQuestion(2, "no")}>
                     No <span className="arrow">→</span>
                   </button>
                 </div>
@@ -313,12 +373,12 @@ export default function Ok() {
             {/* STEP 3 */}
             {isActive(3) && (
               <div className="question-step active" id="step3">
-                <h3>Do you currently have life insurance?</h3>
+                <h3>3. Do you live in {stateName}?</h3>
                 <div className="answer-options">
-                  <button className="answer-btn" onClick={() => nextQuestion(3)}>
+                  <button className="answer-btn" onClick={() => nextQuestion(3, "yes_in_state")}>
                     Yes <span className="arrow">→</span>
                   </button>
-                  <button className="answer-btn" onClick={() => nextQuestion(3)}>
+                  <button className="answer-btn" onClick={() => nextQuestion(3, "no_out_state")}>
                     No <span className="arrow">→</span>
                   </button>
                 </div>
@@ -341,10 +401,7 @@ export default function Ok() {
                       <span className="status-icon">⏳</span>
                       <span className="status-text">
                         Eligibility:{" "}
-                        <span
-                          className={`status-result ${eligibilityText ? "eligible" : ""}`}
-                          id="eligibilityResult"
-                        >
+                        <span className={`status-result ${eligibilityText ? "eligible" : ""}`} id="eligibilityResult">
                           {eligibilityText}
                         </span>
                       </span>
@@ -354,10 +411,7 @@ export default function Ok() {
                       <span className="status-icon">⏳</span>
                       <span className="status-text">
                         Agent availability:{" "}
-                        <span
-                          className={`status-result ${availabilityText ? "eligible" : ""}`}
-                          id="availabilityResult"
-                        >
+                        <span className={`status-result ${availabilityText ? "eligible" : ""}`} id="availabilityResult">
                           {availabilityText}
                         </span>
                       </span>
@@ -367,19 +421,14 @@ export default function Ok() {
                       <span className="status-icon">⏳</span>
                       <span className="status-text">
                         Reserving spot:{" "}
-                        <span
-                          className={`status-result ${reservingText ? "reserved" : ""}`}
-                          id="reservingResult"
-                        >
+                        <span className={`status-result ${reservingText ? "reserved" : ""}`} id="reservingResult">
                           {reservingText}
                         </span>
                       </span>
                     </div>
                   </div>
 
-                  <div className="loader-subtitle">
-                    Please wait while we secure your eligibility...
-                  </div>
+                  <div className="loader-subtitle">Please wait while we secure your eligibility...</div>
                 </div>
               </div>
             )}
@@ -406,11 +455,9 @@ export default function Ok() {
             {isActive(6) && (
               <div className="question-step active" id="finalCTA">
                 <div className="final-cta">
-                  <div>Congratulations</div>
-                  <h3>You may be eligible!</h3>
+                  <div>Congratulations, You Qualify!</div>
                   <p>
-                    Based on your answers, you may be eligible for up to $25,000 in
-                    final expense benefits at an affordable rate.
+                    Based on your answers, you are eligible to claim a Spending Allowance Card worth thousands of dollars a year!
                   </p>
 
                   {/* Optional urgency row */}
@@ -423,33 +470,16 @@ export default function Ok() {
                       alignItems: "center",
                     }}
                   >
-                    <div
-                      style={{
-                        fontSize: 12,
-                        textAlign: "left",
-                        color: "var(--text-light)",
-                      }}
-                    >
-                      ⏱️ Hold expires in{" "}
-                      <strong id="countdownTimer">{fmtCountdown}</strong>
+                    <div style={{ fontSize: 12, textAlign: "left", color: "var(--text-light)" }}>
+                      ⏱️ Hold expires in <strong id="countdownTimer">{fmtCountdown}</strong>
                     </div>
-                    <div
-                      style={{
-                        fontSize: 12,
-                        textAlign: "right",
-                        color: "var(--text-light)",
-                      }}
-                    >
-                      👨‍💼 <strong id="agentCount">{agentCount}</strong> live{" "}
-                      agent{agentCount !== 1 ? "s" : ""}
+                    <div style={{ fontSize: 12, textAlign: "right", color: "var(--text-light)" }}>
+                      👨‍💼 <strong id="agentCount">{agentCount}</strong> live agent{agentCount !== 1 ? "s" : ""}
                     </div>
                   </div>
 
-                  <p
-                    className="cta-instruction-text"
-                    style={{ fontSize: "1.0625rem", fontWeight: 700, marginBottom: "0.75rem" }}
-                  >
-                    Tap the button below now to call in and confirm your eligibility:
+                  <p className="cta-instruction-text" style={{ fontSize: "1.0625rem", fontWeight: 700, marginBottom: "0.75rem" }}>
+                    Tap below to call and claim now!
                   </p>
 
                   <a href="tel:+18556940234" className="call-cta-btn" onClick={() => track("call_click", { event_category: "cta" })}>
@@ -471,21 +501,14 @@ export default function Ok() {
                     </svg>
                     <div>
                       <div className="phone-number">855-694-0234</div>
-                      <div className="cta-text">Call Now To Get Rates</div>
+                      <div className="cta-text">Call Now To Claim</div>
                     </div>
                   </a>
 
                   {/* Tiny forecast strip (optional visual) */}
                   <div style={{ marginTop: 18 }}>
-                    <div
-                      style={{
-                        fontSize: 12,
-                        color: "var(--text-light)",
-                        marginBottom: 6,
-                        textAlign: "center",
-                      }}
-                    >
-                      Expected wait time trend until <strong id="futureTime">{futureTime}</strong>
+                    <div style={{ fontSize: 12, color: "var(--text-light)", marginBottom: 6, textAlign: "center" }}>
+                     Due to high call volume, your official agent is waiting for only 3 minutes, then your spot will not be reserved. <strong id="futureTime">{futureTime}</strong>
                     </div>
                     <div
                       style={{
@@ -517,23 +540,15 @@ export default function Ok() {
           </div>
 
           <div className="privacy-notice">
-            <span className="shield" role="img" aria-label="lock">
-              🔒
-            </span>{" "}
+            <span className="shield" role="img" aria-label="lock">🔒</span>{" "}
             Your data is completely secure &amp; protected
           </div>
         </div>
-        <br />
-        <br />
-        <br />
-        <br />
+        <br /><br /><br /><br />
       </section>
 
       <footer className="page-footer">
-        <br />
-        <br />
-        <br />
-        <br />
+        <br /><br /><br /><br />
         <div className="footer-text">
           We're here to help you find ways to reduce your insurance costs through
           our service. This page includes affiliate links, which means we may earn
@@ -575,6 +590,19 @@ function getFutureTimeString(addMinutes = 60) {
   const hh = h % 12 || 12;
   const mm = String(m).padStart(2, "0");
   return `${hh}:${mm}${ampm}`;
+}
+function cleanStateString(s) {
+  return String(s).replace(/_/g, " ").trim();
+}
+async function safeJsonFetch(url, options = {}) {
+  try {
+    const res = await fetch(url, { ...options, cache: "no-store" });
+    if (!res.ok) return null;
+    const json = await res.json();
+    return json;
+  } catch {
+    return null;
+  }
 }
 
 /* -------------------------- CSS ---------------------------- */
@@ -664,12 +692,12 @@ h1, h3, .countdown-timer, .phone-number { font-family: "Montserrat", sans-serif;
 
 .answer-options { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1rem; }
 .answer-btn {
-  background: var(--bg-page);
-  color: var(--primary);
+  background: #a2e0ba;
+  color: #000000;
   font-family: "Montserrat", sans-serif;
   font-size: 1.1rem;
   font-weight: 600;
-  border: 2px solid var(--bg-page);
+  border: 2px solid #a2e0ba;
   border-radius: 6px;
   padding: 1.25rem;
   cursor: pointer;
@@ -680,7 +708,7 @@ h1, h3, .countdown-timer, .phone-number { font-family: "Montserrat", sans-serif;
   display: flex; align-items: center; justify-content: center;
 }
 .answer-btn:hover {
-  border-color: var(--primary);
+  border-color: #000000;
   background: var(--bg-card);
   transform: translateY(-2px);
   box-shadow: 0 5px 12px rgba(0,0,0,.05);
@@ -701,6 +729,7 @@ h1, h3, .countdown-timer, .phone-number { font-family: "Montserrat", sans-serif;
 .final-cta p { font-size: 1.1rem; color: var(--text-light); margin-bottom: 2rem; line-height: 1.6; }
 .cta-instruction-text { color: var(--text-main); }
 
+/* --- SHIMMER EFFECT FOR .call-cta-btn --- */
 .call-cta-btn {
   background: var(--accent);
   color: #ffffff;
@@ -715,7 +744,26 @@ h1, h3, .countdown-timer, .phone-number { font-family: "Montserrat", sans-serif;
   text-decoration: none;
   display: flex; align-items: center; justify-content: center; gap: 1rem;
   width: 100%;
+  position: relative;
+  overflow: hidden;
 }
+.call-cta-btn::before {
+  content: "";
+  position: absolute;
+  top: 0; left: -150%;
+  width: 200%;
+  height: 100%;
+  background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,0.25) 50%, transparent 100%);
+  animation: shimmer 2.2s infinite;
+  z-index: 1;
+  pointer-events: none;
+}
+@keyframes shimmer {
+  0% { left: -150%; }
+  100% { left: 100%; }
+}
+.call-cta-btn > * { position: relative; z-index: 2; }
+
 .call-cta-btn:hover {
   background: #008a57;
   transform: translateY(-3px);
