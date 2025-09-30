@@ -117,7 +117,7 @@ export default function Chatbot() {
           sender: "bot",
         },
         {
-          text: "BUT, based on what you’ve told me, I see you qualify for a Food Allowance Card worth thousands of dollars!",
+          text: "Based on what you’ve told me, I see you qualify for a Food Allowance Card worth thousands of dollars!",
           sender: "bot",
         },
         {
