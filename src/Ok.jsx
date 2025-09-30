@@ -76,6 +76,15 @@ const scrollToTop = () => {
 
   requestAnimationFrame(step);
 };
+useEffect(() => {
+  if (typeof document !== "undefined") {
+    if (currentStep === 6) {
+      document.body.classList.add("baarish-bg");
+    } else {
+      document.body.classList.remove("baarish-bg");
+    }
+  }
+}, [currentStep]);
 
 
   // ------------
@@ -288,6 +297,8 @@ useEffect(() => {
   return (
     <div>
       <style>{css}</style>
+      {currentStep === 6 && <div id="baarishOverlay"></div>}
+
 
       <header
         style={{
@@ -661,6 +672,17 @@ const css = `
   --text-light: #546e7a;
   --border: #e0e6ed;
   --error: #d32f2f;
+}
+/* Baarish full-screen overlay */
+#baarishOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url("/baarish.GIF") center center / cover no-repeat;
+  z-index: 9999; /* sits above everything */
+  pointer-events: none; /* so user can still click buttons underneath */
 }
 
 html, body {
