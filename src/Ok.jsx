@@ -595,6 +595,12 @@ const css = `
   --border: #e0e6ed;
   --error: #d32f2f;
 }
+
+html, body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
   font-family: "Open Sans", -apple-system, BlinkMacSystemFont, sans-serif;
@@ -602,6 +608,7 @@ body {
   color: var(--text-main);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  
 }
 h1, h3, .countdown-timer, .phone-number { font-family: "Montserrat", sans-serif; }
 
