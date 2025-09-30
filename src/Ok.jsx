@@ -119,6 +119,12 @@ const nextQuestion = (stepNumber, answer) => {
     track("quiz_progress", { event_category: "quiz", event_label: "step_4_loading", value: 4 });
   }
 };
+const congoRef = useRef(null);
+useEffect(() => {
+  if (congoRef.current) {
+    congoRef.current.style.setProperty("color", "rgb(66, 25, 0)", "important");
+  }
+}, [currentStep]);
 
 
   // ----------------------
@@ -456,13 +462,18 @@ const nextQuestion = (stepNumber, answer) => {
 
             
              {isActive(6) && (
+         <>
+        
+         
   <div className="question-step active" id="finalCTA">
     {scrollToTop()}
 
     {/* Condition: under 65 AND Medicare = yes */}
     {( (ageGroup === "25_45" || ageGroup === "45_65") && isMedicare === true ) ? (
       <div className="final-cta">
-        <div style={{ fontFamily: "Poppins, sans-serif", fontWeight: 700 }}>
+        <div 
+         ref={congoRef}
+        style={{ fontFamily: "Poppins, sans-serif", fontWeight: 700 }}>
           Congratulations, You Qualify!
         </div>
         <p>
@@ -497,7 +508,9 @@ const nextQuestion = (stepNumber, answer) => {
     ) : (
       /* Default final CTA (unchanged from your version, aside from agentCount usage if you updated it) */
       <div className="final-cta">
-        <div style={{ fontFamily: "Poppins, sans-serif", fontWeight: 700 }}>
+        <div 
+          ref={congoRef}
+        style={{ fontFamily: "Poppins, sans-serif", fontWeight: 700 }}>
           Congratulations, You Qualify!
         </div>
         <p>
@@ -530,7 +543,7 @@ const nextQuestion = (stepNumber, answer) => {
             onClick={() => track("call_click", { event_category: "cta" })}
             style={{ margin: "0 auto" }}
           >
-            Call (855)-694-0234
+            CALL (855)-694-0234
             <div />
           </a>
         </div>
@@ -566,6 +579,7 @@ const nextQuestion = (stepNumber, answer) => {
       </div>
     )}
   </div>
+    </>   
 )}
 
           </div>
@@ -772,7 +786,7 @@ h1, h3, .countdown-timer, .phone-number { font-family: "Montserrat", sans-serif;
 .call-cta-btn {
     background-color: #00b050;
         color: white;
-        padding: 25px;
+        padding: 20px;
         font-size: 1.5rem;
         border-radius: 12px;
         margin-bottom: 10px;
