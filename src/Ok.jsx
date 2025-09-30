@@ -440,7 +440,7 @@ const nextQuestion = (stepNumber, answer) => {
                   {isActive(6) && (
                     <div className="question-step active" id="finalCTA">
                     <div className="final-cta">
-                      <div style={{ fontFamily: "Poppins, sans-serif", fontWeight: "bold" }}>
+                      <div style={{ fontFamily: "Poppins, sans-serif", fontWeight: "700" }}>
                       Congratulations, You Qualify!
                       </div>
                       <p>
@@ -475,25 +475,10 @@ const nextQuestion = (stepNumber, answer) => {
                       onClick={() => track("call_click", { event_category: "cta" })}
                       style={{ margin: "0 auto" }}
                     >
-                      <svg
-                        className="phone-icon"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                        aria-hidden="true"
-                      >
-                        <path
-                          d="M3 5C3 3.89543 3.89543 3 5 3H8.27924C8.70967 3 9.09181 3.27543 9.22792 3.68377L10.7257 8.17721C10.8831 8.64932 10.6694 9.16531 10.2243 9.38787L7.96701 10.5165C9.06925 12.9612 11.0388 14.9308 13.4835 16.033L14.6121 13.7757C14.8347 13.3306 15.3507 13.1169 15.8228 13.2743L20.3162 14.7721C20.7246 14.9082 21 15.2903 21 15.7208V19C21 20.1046 20.1046 21 19 21H18C9.71573 21 3 14.2843 3 6V5Z"
-                          stroke="white"
-                          strokeWidth="2"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
+                      Call (855)-694-0234
                       <div>
-                        <div className="phone-number">855-694-0234</div>
-                        <div className="cta-text">Call Now To Claim</div>
+                        {/* <div className="phone-number"> Call (855)-694-0234</div> */}
+                        {/* <div className="cta-text">Call Now To Claim</div> */}
                       </div>
                     </a>
                   </div>
@@ -603,7 +588,7 @@ const css = `
 :root {
   --primary: #003366;
   --accent: #00a86b;
-  --bg-page: #f5f7fa;
+  --bg-page: #ffffffff;
   --bg-card: #ffffff;
   --text-main: #2c3e50;
   --text-light: #546e7a;
@@ -725,21 +710,17 @@ h1, h3, .countdown-timer, .phone-number { font-family: "Montserrat", sans-serif;
 
 /* --- SHIMMER EFFECT FOR .call-cta-btn --- */
 .call-cta-btn {
-  background: var(--accent);
-  color: #ffffff;
-  font-family: "Montserrat", sans-serif;
-  border: none;
-  border-radius: 8px;
-  box-shadow: 0 8px 24px rgba(0,168,107,.3);
-  padding: 1.25rem 2rem;
-  cursor: pointer;
-  transition: all .3s ease;
-  outline: none;
-  text-decoration: none;
-  display: flex; align-items: center; justify-content: center; gap: 1rem;
-  width: 100%;
-  position: relative;
-  overflow: hidden;
+    background-color: #00b050;
+        color: white;
+        padding: 15px;
+        font-size: 1.5rem;
+        border-radius: 12px;
+        margin-bottom: 10px;
+        text-align: center;
+        box-shadow: 0 0 12px 4px rgba(0, 176, 80, 0.6); /* green glow */
+  transition: box-shadow 0.3s ease;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
 }
 .call-cta-btn::before {
   content: "";
@@ -809,7 +790,7 @@ h1, h3, .countdown-timer, .phone-number { font-family: "Montserrat", sans-serif;
   .main-headline h1 { font-size: 2rem; }
   .quiz-container { margin-top: -1.5rem; padding: 1.5rem; }
   .question-step h3 { font-size: 1.25rem; }
-  .call-cta-btn { flex-direction: column; padding: 1rem; gap: .5rem; }
+  
   .call-cta-btn .phone-number { font-size: 1.5rem; }
 }
 `;
