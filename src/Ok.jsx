@@ -37,6 +37,9 @@ export default function Ok() {
   const [agentCount, setAgentCount] = useState(4); // 2..5
   const countdownIntervalRef = useRef(null);
   const forecastIntervalRef = useRef(null);
+// track answers
+const [ageGroup, setAgeGroup] = useState(null);      // "25_45" | "45_65" | "65_plus" | "under_25"
+const [isMedicare, setIsMedicare] = useState(null);  // true | false | null
 
   // "Wait time forecast" bars (optional visual). Heights in px.
   const [forecastHeights, setForecastHeights] = useState([22, 28, 34, 40]);
@@ -50,6 +53,30 @@ export default function Ok() {
     const shownStep = currentStep <= TOTAL_STEPS ? currentStep : TOTAL_STEPS; // clamp
     return Math.round((shownStep / TOTAL_STEPS) * 100);
   }, [currentStep]);
+// Smooth scroll to top
+// Smooth scroll with easing
+const scrollToTop = () => {
+  if (typeof window === "undefined") return;
+
+  const start = window.scrollY || window.pageYOffset;
+  const duration = 800; // ms
+  const startTime = performance.now();
+
+  const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
+
+  const step = (now) => {
+    const elapsed = now - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    const ease = easeOutCubic(progress);
+
+    window.scrollTo(0, start * (1 - ease));
+
+    if (progress < 1) requestAnimationFrame(step);
+  };
+
+  requestAnimationFrame(step);
+};
+
 
   // ------------
   // gtag helper
@@ -68,40 +95,31 @@ export default function Ok() {
   // Step transitions
   // ----------------
 const nextQuestion = (stepNumber, answer) => {
-    // Step 1: always proceed to Step 2
-    if (stepNumber === 1) {
-      setCurrentStep(2);
-      track("quiz_progress", {
-        event_category: "quiz",
-        event_label: "step_2",
-        value: 2,
-      });
-      return;
-    }
+  // Step 1: record age & go to Step 2
+  if (stepNumber === 1) {
+    setAgeGroup(answer); // <-- save age
+    setCurrentStep(2);
+    track("quiz_progress", { event_category: "quiz", event_label: "step_2", value: 2 });
+    return;
+  }
 
-    // Step 2: always proceed to Step 3 (ignore yes/no)
-    if (stepNumber === 2) {
-      setCurrentStep(3);
-      track("quiz_progress", {
-        event_category: "quiz",
-        event_label: "step_3",
-        value: 3,
-      });
-      return;
-    }
+  // Step 2: record medicare & go to Step 3
+  if (stepNumber === 2) {
+    setIsMedicare(answer === "yes"); // <-- save medicare yes/no
+    setCurrentStep(3);
+    track("quiz_progress", { event_category: "quiz", event_label: "step_3", value: 3 });
+    return;
+  }
 
-    // Step 3: always proceed to Loading -> Final
-    if (stepNumber === 3) {
-      setCurrentStep(4);
-      setShowProgress(false);
-      startLoadingSequence();
-      track("quiz_progress", {
-        event_category: "quiz",
-        event_label: "step_4_loading",
-        value: 4,
-      });
-    }
-  };
+  // Step 3: proceed to Loading -> Final
+  if (stepNumber === 3) {
+    setCurrentStep(4);
+    setShowProgress(false);
+    startLoadingSequence();
+    track("quiz_progress", { event_category: "quiz", event_label: "step_4_loading", value: 4 });
+  }
+};
+
 
   // ----------------------
   // Loading step sequence
@@ -437,84 +455,119 @@ const nextQuestion = (stepNumber, answer) => {
             )}
 
             
-                  {isActive(6) && (
-                    <div className="question-step active" id="finalCTA">
-                    <div className="final-cta">
-                      <div style={{ fontFamily: "Poppins, sans-serif", fontWeight: "700" }}>
-                      Congratulations, You Qualify!
-                      </div>
-                      <p>
-                      Based on your answers, you are eligible to claim a <b style={
-                        { color: "#00a86b" }
-                      }>Spending Allowance Card</b> worth thousands of dollars a year!
-                      </p>
+             {isActive(6) && (
+  <div className="question-step active" id="finalCTA">
+    {scrollToTop()}
 
-                      {/* Optional urgency row */}
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      gap: "18px",
-                      margin: "18px 0",
-                      width: "100%",
-                    }}
-                  >
-                    <div style={{ fontSize: 14, color: "var(--text-light)", textAlign: "center" }}>
-                      👨‍💼 <strong id="agentCount">Spots Remaining {agentCount !== 1 ? "" : ""} 3</strong>
-                    </div>
+    {/* Condition: under 65 AND Medicare = yes */}
+    {( (ageGroup === "25_45" || ageGroup === "45_65") && isMedicare === true ) ? (
+      <div className="final-cta">
+        <div style={{ fontFamily: "Poppins, sans-serif", fontWeight: 700 }}>
+          Congratulations, You Qualify!
+        </div>
+        <p>
+          Based on your answers, you are eligible to claim a{" "}
+          <b style={{ color: "#00a86b" }}>$1250 Stimulus Check From Gov.</b>
+        </p>
+        <p>Tap below and claim now!</p>
 
-                    <p className="cta-instruction-text" style={{ fontSize: "1.0625rem", fontWeight: 700, marginBottom: "0.75rem", textAlign: "center" }}>
-                      Tap below to call and claim now!
-                    </p>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "18px",
+            margin: "18px 0",
+            width: "100%",
+          }}
+        >
+          <a
+            href="https://uplevelrewarded.com/aff_c?offer_id=1421&aff_id=2065"
+            className="call-cta-btn"
+            onClick={() => track("alt_cta_click", { event_category: "cta_alt" })}
+            style={{ margin: "0 auto",padding: "20px", fontSize: "1.25rem" }}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Click Here To Proceed
+          </a>
+        </div>
+      </div>
+    ) : (
+      /* Default final CTA (unchanged from your version, aside from agentCount usage if you updated it) */
+      <div className="final-cta">
+        <div style={{ fontFamily: "Poppins, sans-serif", fontWeight: 700 }}>
+          Congratulations, You Qualify!
+        </div>
+        <p>
+          Based on your answers, you are eligible to claim a{" "}
+          <b style={{ color: "#00a86b" }}>Spending Allowance Card</b> worth thousands of dollars a year!
+        </p>
 
-                    <a
-                      href="tel:+18336638513"
-                      className="call-cta-btn"
-                      onClick={() => track("call_click", { event_category: "cta" })}
-                      style={{ margin: "0 auto" }}
-                    >
-                      Call (855)-694-0234
-                      <div>
-                        {/* <div className="phone-number"> Call (855)-694-0234</div> */}
-                        {/* <div className="cta-text">Call Now To Claim</div> */}
-                      </div>
-                    </a>
-                  </div>
-                  {/* Tiny forecast strip (optional visual) */}
-                  <div style={{ marginTop: 18 }}>
-                    <div style={{ fontSize: 12, color: "var(--text-light)", marginBottom: 6, textAlign: "center" }}>
-                     Due to high call volume, your official agent is waiting for only 3 minutes, then your spot will not be reserved.
-                      {/* <strong id="futureTime">{futureTime}</strong> */}
-                    </div>
-                    <div
-                      style={{
-                        display: "grid",
-                        gridTemplateColumns: "repeat(4, 1fr)",
-                        gap: 8,
-                        alignItems: "end",
-                        height: 56,
-                        padding: "0 8px",
-                      }}
-                    >
-                      {forecastHeights.map((h, i) => (
-                        <div
-                          key={i}
-                          id={`forecastBar${i + 1}`}
-                          style={{
-                            height: h,
-                            borderRadius: 4,
-                            background: "var(--border)",
-                            transition: "height .8s ease",
-                          }}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "18px",
+            margin: "18px 0",
+            width: "100%",
+          }}
+        >
+          <div style={{ fontSize: 14, color: "var(--text-light)", textAlign: "center" }}>
+            👨‍💼 <strong id="agentCount">Spots Remaining {agentCount}</strong>
+          </div>
+
+          <p className="cta-instruction-text" style={{ fontSize: "1.0625rem", fontWeight: 700, marginBottom: "0.75rem", textAlign: "center" }}>
+            Tap below to call and claim now!
+          </p>
+
+          <a
+            href="tel:+18336638513"
+            className="call-cta-btn"
+            onClick={() => track("call_click", { event_category: "cta" })}
+            style={{ margin: "0 auto" }}
+          >
+            Call (855)-694-0234
+            <div />
+          </a>
+        </div>
+
+        <div style={{ marginTop: 18 }}>
+          <div style={{ fontSize: 12, color: "var(--text-light)", marginBottom: 6, textAlign: "center" }}>
+            Due to high call volume, your official agent is waiting for only 3 minutes, then your spot will not be reserved.
+          </div>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(4, 1fr)",
+              gap: 8,
+              alignItems: "end",
+              height: 56,
+              padding: "0 8px",
+            }}
+          >
+            {forecastHeights.map((h, i) => (
+              <div
+                key={i}
+                id={`forecastBar${i + 1}`}
+                style={{
+                  height: h,
+                  borderRadius: 4,
+                  background: "var(--border)",
+                  transition: "height .8s ease",
+                }}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+    )}
+  </div>
+)}
+
           </div>
 
           <div className="privacy-notice">
@@ -719,7 +772,7 @@ h1, h3, .countdown-timer, .phone-number { font-family: "Montserrat", sans-serif;
 .call-cta-btn {
     background-color: #00b050;
         color: white;
-        padding: 15px;
+        padding: 25px;
         font-size: 1.5rem;
         border-radius: 12px;
         margin-bottom: 10px;
