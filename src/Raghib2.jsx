@@ -106,8 +106,7 @@ export default function Chatbot() {
           text: "Do you live in the United States?",
           sender: "bot",
           options: ["Yes ", "No "],
-        },
-      ];
+      
     }else if (
       option === "No, I am over 65"
     ) {
