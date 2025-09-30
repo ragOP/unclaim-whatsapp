@@ -113,10 +113,6 @@ export default function Chatbot() {
     ) {
       botResponses = [
         {
-          text: "Unfortunately, you don’t qualify for this Spending Allowance.",
-          sender: "bot",
-        },
-        {
           text: "Based on what you’ve told me, I see you qualify for a Food Allowance Card worth thousands of dollars!",
           sender: "bot",
         },
@@ -153,10 +149,6 @@ export default function Chatbot() {
     }
     else if (option === "  Yes"){
     botResponses = [
-      {
-        text: "Unfortunately, you don’t qualify for this Spending Allowance.",
-        sender: "bot",
-      },
       {
         text: "BUT, based on what you’ve told me, I see you qualify for a $1250 Stimulus Check from the gov!",
         sender: "bot",
