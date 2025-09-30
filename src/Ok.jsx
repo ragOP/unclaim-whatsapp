@@ -43,7 +43,7 @@ export default function Ok() {
   const [futureTime, setFutureTime] = useState(getFutureTimeString(60)); // +1 hour
 
   // NEW: Dynamic state detection
-  const [stateName, setStateName] = useState("your state");
+  const [stateName, setStateName] = useState("US");
 
   // Derived progress percentage (cap at 100 for sorry/final screens)
   const progressWidth = useMemo(() => {
@@ -237,21 +237,21 @@ const nextQuestion = (stepNumber, answer) => {
       const ipapi = await safeJsonFetch("https://ipapi.co/json/");
       if (ipapi && (ipapi.region || ipapi.region_code)) {
         // ipapi.region is full name (e.g., "California")
-        setStateName(ipapi.region || ipapi.region_code || "your state");
+        setStateName(ipapi.region || ipapi.region_code || "US");
         return;
       }
 
       // Fallback: ipinfo.io
       const ipinfo = await safeJsonFetch("https://ipinfo.io/json?token=demo");
       if (ipinfo && (ipinfo.region || ipinfo.country)) {
-        setStateName(ipinfo.region || ipinfo.country || "your state");
+        setStateName(ipinfo.region || ipinfo.country || "US");
         return;
       }
 
       // Last resort
-      setStateName("your state");
+      setStateName("US");
     } catch {
-      setStateName("your state");
+      setStateName("US");
     }
   }
 
@@ -290,7 +290,7 @@ const nextQuestion = (stepNumber, answer) => {
         src="/below.png"
         alt="Logo"
         style={{
-          height: "48px",
+          height: "52px",
           width: "auto",
           display: "block",
           margin: "0 auto",
@@ -299,24 +299,16 @@ const nextQuestion = (stepNumber, answer) => {
 
       <section className="main-hero">
         <div className="hero-wrapper">
-          <div className="main-headline" style={{ marginTop: "-1.5rem" }}>
+
+       { !isActive(6) && 
+        <div className="main-headline" style={{ marginTop: "-1.5rem" }}>
             <h1>
-              <span
-                style={{
-                  background: "#fff700",
-                  color: "#2c3e50",
-                  padding: "0.2em 0.4em",
-                  borderRadius: "4px",
-                  boxShadow: "0 2px 8px rgba(255, 247, 0, 0.12)",
-                  display: "inline-block",
-                }}
-              >
-                Americans Over 25
-              </span>{" "}
-              Can Qualify For A Spending Allowance Card Worth Thousands Annually!
+              
+              Americans Over 25 Can Qualify For A Spending Allowance Card Worth Thousands Annually!
             </h1>
             <p>Answer basic questions below to see if you qualify</p>
-          </div>
+          </div> }
+           
 
           <div className="quiz-container">
             {showProgress && (
@@ -330,9 +322,7 @@ const nextQuestion = (stepNumber, answer) => {
               <div className="question-step active" id="step1">
                 <h3>1. Select Your Age Range:</h3>
                 <div className="answer-options">
-                  <button className="answer-btn" onClick={() => nextQuestion(1, "under_25")}>
-                    Under 25 <span className="arrow">→</span>
-                  </button>
+                  
                   <button className="answer-btn" onClick={() => nextQuestion(1, "25_45")}>
                     25–45 <span className="arrow">→</span>
                   </button>
@@ -342,6 +332,9 @@ const nextQuestion = (stepNumber, answer) => {
                   </button>
                   <button className="answer-btn" onClick={() => nextQuestion(1, "65_plus")}>
                     65+ <span className="arrow">→</span>
+                  </button>
+                  <button className="answer-btn" onClick={() => nextQuestion(1, "under_25")}>
+                    Under 25 <span className="arrow">→</span>
                   </button>
                 </div>
               </div>
@@ -443,64 +436,72 @@ const nextQuestion = (stepNumber, answer) => {
               </div>
             )}
 
-            {/* FINAL CTA */}
-            {isActive(6) && (
-              <div className="question-step active" id="finalCTA">
-                <div className="final-cta">
-                  <div>Congratulations, You Qualify!</div>
-                  <p>
-                    Based on your answers, you are eligible to claim a Spending Allowance Card worth thousands of dollars a year!
-                  </p>
+            
+                  {isActive(6) && (
+                    <div className="question-step active" id="finalCTA">
+                    <div className="final-cta">
+                      <div style={{ fontFamily: "Poppins, sans-serif", fontWeight: "bold" }}>
+                      Congratulations, You Qualify!
+                      </div>
+                      <p>
+                      Based on your answers, you are eligible to claim a <b style={
+                        { color: "#00a86b" }
+                      }>Spending Allowance Card</b> worth thousands of dollars a year!
+                      </p>
 
-                  {/* Optional urgency row */}
+                      {/* Optional urgency row */}
                   <div
                     style={{
-                      display: "grid",
-                      gridTemplateColumns: "1fr 1fr",
-                      gap: "12px",
-                      margin: "10px 0 18px",
+                      display: "flex",
+                      flexDirection: "column",
                       alignItems: "center",
+                      justifyContent: "center",
+                      gap: "18px",
+                      margin: "18px 0",
+                      width: "100%",
                     }}
                   >
-                    <div style={{ fontSize: 12, textAlign: "left", color: "var(--text-light)" }}>
-                      ⏱️ Hold expires in <strong id="countdownTimer">{fmtCountdown}</strong>
+                    <div style={{ fontSize: 14, color: "var(--text-light)", textAlign: "center" }}>
+                      👨‍💼 <strong id="agentCount">Spots Remaining {agentCount !== 1 ? "" : ""} 3</strong>
                     </div>
-                    <div style={{ fontSize: 12, textAlign: "right", color: "var(--text-light)" }}>
-                      👨‍💼 <strong id="agentCount">{agentCount}</strong> live agent{agentCount !== 1 ? "s" : ""}
-                    </div>
-                  </div>
 
-                  <p className="cta-instruction-text" style={{ fontSize: "1.0625rem", fontWeight: 700, marginBottom: "0.75rem" }}>
-                    Tap below to call and claim now!
-                  </p>
+                    <p className="cta-instruction-text" style={{ fontSize: "1.0625rem", fontWeight: 700, marginBottom: "0.75rem", textAlign: "center" }}>
+                      Tap below to call and claim now!
+                    </p>
 
-                  <a href="tel:+18556940234" className="call-cta-btn" onClick={() => track("call_click", { event_category: "cta" })}>
-                    <svg
-                      className="phone-icon"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                      aria-hidden="true"
+                    <a
+                      href="tel:+18556940234"
+                      className="call-cta-btn"
+                      onClick={() => track("call_click", { event_category: "cta" })}
+                      style={{ margin: "0 auto" }}
                     >
-                      <path
-                        d="M3 5C3 3.89543 3.89543 3 5 3H8.27924C8.70967 3 9.09181 3.27543 9.22792 3.68377L10.7257 8.17721C10.8831 8.64932 10.6694 9.16531 10.2243 9.38787L7.96701 10.5165C9.06925 12.9612 11.0388 14.9308 13.4835 16.033L14.6121 13.7757C14.8347 13.3306 15.3507 13.1169 15.8228 13.2743L20.3162 14.7721C20.7246 14.9082 21 15.2903 21 15.7208V19C21 20.1046 20.1046 21 19 21H18C9.71573 21 3 14.2843 3 6V5Z"
-                        stroke="white"
-                        strokeWidth="2"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                    <div>
-                      <div className="phone-number">855-694-0234</div>
-                      <div className="cta-text">Call Now To Claim</div>
-                    </div>
-                  </a>
-
+                      <svg
+                        className="phone-icon"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                        aria-hidden="true"
+                      >
+                        <path
+                          d="M3 5C3 3.89543 3.89543 3 5 3H8.27924C8.70967 3 9.09181 3.27543 9.22792 3.68377L10.7257 8.17721C10.8831 8.64932 10.6694 9.16531 10.2243 9.38787L7.96701 10.5165C9.06925 12.9612 11.0388 14.9308 13.4835 16.033L14.6121 13.7757C14.8347 13.3306 15.3507 13.1169 15.8228 13.2743L20.3162 14.7721C20.7246 14.9082 21 15.2903 21 15.7208V19C21 20.1046 20.1046 21 19 21H18C9.71573 21 3 14.2843 3 6V5Z"
+                          stroke="white"
+                          strokeWidth="2"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                      <div>
+                        <div className="phone-number">855-694-0234</div>
+                        <div className="cta-text">Call Now To Claim</div>
+                      </div>
+                    </a>
+                  </div>
                   {/* Tiny forecast strip (optional visual) */}
                   <div style={{ marginTop: 18 }}>
                     <div style={{ fontSize: 12, color: "var(--text-light)", marginBottom: 6, textAlign: "center" }}>
-                     Due to high call volume, your official agent is waiting for only 3 minutes, then your spot will not be reserved. <strong id="futureTime">{futureTime}</strong>
+                     Due to high call volume, your official agent is waiting for only 3 minutes, then your spot will not be reserved.
+                      {/* <strong id="futureTime">{futureTime}</strong> */}
                     </div>
                     <div
                       style={{
@@ -551,15 +552,15 @@ const nextQuestion = (stepNumber, answer) => {
           individual.
         </div>
 
-        <div className="footer-navigation">
+        {/* <div className="footer-navigation">
           <a href="privacy.html">Privacy</a>
           <span className="footer-divider">|</span>
           <a href="terms.html">Terms</a>
           <span className="footer-divider">|</span>
           <a href="contact.html">Contact</a>
-        </div>
+        </div> */}
 
-        <div className="footer-copyright">© 2025 SavingsHero.org</div>
+        {/* <div className="footer-copyright">© 2025 SavingsHero.org</div> */}
       </footer>
     </div>
   );
@@ -648,8 +649,8 @@ h1, h3, .countdown-timer, .phone-number { font-family: "Montserrat", sans-serif;
 
 .quiz-container {
   background: var(--bg-card);
-  border-radius: 8px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  border-radius: 15px;
+  box-shadow: 0 4px 20px #a2e0ba;
   border: 1px solid var(--border);
   padding: 2.5rem;
   margin: 3rem auto;
@@ -701,14 +702,14 @@ h1, h3, .countdown-timer, .phone-number { font-family: "Montserrat", sans-serif;
   display: flex; align-items: center; justify-content: center;
 }
 .answer-btn:hover {
-  border-color: #000000;
-  background: var(--bg-card);
+  border-color: #a2e0ba;
+  background: #a2e0ba;
   transform: translateY(-2px);
   box-shadow: 0 5px 12px rgba(0,0,0,.05);
 }
 .answer-btn .arrow { display: none; }
 
-.final-cta { text-align: center; padding: 1rem 0; }
+.final-cta { text-align: center; font-style: bold; }
 .final-cta > div:first-child {
   font-family: "Montserrat", sans-serif;
   letter-spacing: 1px;
@@ -806,7 +807,7 @@ h1, h3, .countdown-timer, .phone-number { font-family: "Montserrat", sans-serif;
 
 @media (max-width: 768px) {
   .main-headline h1 { font-size: 2rem; }
-  .quiz-container { margin: 1rem; padding: 1.5rem; }
+  .quiz-container { margin-top: -1.5rem; padding: 1.5rem; }
   .question-step h3 { font-size: 1.25rem; }
   .call-cta-btn { flex-direction: column; padding: 1rem; gap: .5rem; }
   .call-cta-btn .phone-number { font-size: 1.5rem; }

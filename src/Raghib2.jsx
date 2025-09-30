@@ -150,7 +150,7 @@ export default function Chatbot() {
     else if (option === "  Yes"){
     botResponses = [
       {
-        text: "BUT, based on what you’ve told me, I see you qualify for a $1250 Stimulus Check from the gov!",
+        text: "Based on what you’ve told me, I see you qualify for a $1250 Stimulus Check from the gov!",
         sender: "bot",
       },
       {
