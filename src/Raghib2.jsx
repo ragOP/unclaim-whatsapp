@@ -188,7 +188,7 @@ export default function Chatbot() {
           sender: "bot",
         },
         {
-          text: "Based on what you've told me, you’re eligible for the $5800 Spending Allowance And Lifetime Free Health Coverage!",
+          text: "Based on what you've told me, you’re eligible for the <strong>$5800 Spending Allowance</strong> And Lifetime Free Health Coverage!",
           sender: "bot",
         },
       ];
@@ -293,13 +293,13 @@ export default function Chatbot() {
                 }`}
                 style={{ minWidth: "70px", overflow: "hidden" }}
               >
-                <motion.span
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.3 }}
-                >
-                  {msg.text}
-                </motion.span>
+              <motion.span
+  initial={{ opacity: 0 }}
+  animate={{ opacity: 1 }}
+  transition={{ delay: 0.3 }}
+  dangerouslySetInnerHTML={{ __html: msg.text }}
+/>
+
 
                 <span className="flex flex-row-reverse gap-1 items-center">
                   {msg.sender === "user" && (
