@@ -188,7 +188,7 @@ export default function Chatbot() {
           sender: "bot",
         },
         {
-          text: "Based on what you've told me, you’re eligible for the $5800 Spending Allowance!",
+          text: "Based on what you've told me, you’re eligible for the $5800 Spending Allowance And Lifetime Free Health Coverage!",
           sender: "bot",
         },
       ];
