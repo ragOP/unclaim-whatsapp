@@ -549,12 +549,12 @@ useEffect(() => {
           </p>
 
           <a
-            href="tel:+18336638513"
+            href="tel:+18337704402"
             className="call-cta-btn"
             onClick={() => track("call_click", { event_category: "cta" })}
             style={{ margin: "0 auto" }}
           >
-            CALL (855)-694-0234
+            CALL (833)-770-4402
             <div />
           </a>
         </div>
