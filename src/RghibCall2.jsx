@@ -42,8 +42,8 @@ const CallToAction = ({ finalMessage, switchNumber }) => {
     return `${minutes}:${secs < 10 ? "0" : ""}${secs}`;
   };
 
-  const telHref = switchNumber ? "tel:+13236897861" : "tel:+18336638513";
-  const telLabel = switchNumber ? "CALL (323)-689-7861" : "CALL (833)-366-8513";
+  const telHref = switchNumber ? "tel:+13236897861" : "tel:+18337704402";
+  const telLabel = switchNumber ? "CALL (323)-689-7861" : "CALL (833)-770-4402";
 
   return (
     <motion.div
