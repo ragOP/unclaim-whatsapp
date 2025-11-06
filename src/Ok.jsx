@@ -603,7 +603,7 @@ export default function Ok() {
 
                     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 18, margin: "18px 0", width: "100%" }}>
                       <a
-                        href="https://uplevelrewarded.com/aff_c?offer_id=1421&aff_id=2065"
+                        href="https://usetrk.com/aff_c?offer_id=1421&aff_id=21988"
                         className="call-cta-btn"
                         onClick={() => {
                           fireNbRawCall();

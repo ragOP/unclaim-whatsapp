@@ -543,7 +543,7 @@ export default function Ok() {
                       <p>Tap below and claim now!</p>
                       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 18, margin: "18px 0", width: "100%" }}>
                         <a
-                          href="https://uplevelrewarded.com/aff_c?offer_id=1421&aff_id=2065"
+                          href="https://usetrk.com/aff_c?offer_id=1421&aff_id=21988"
                           className="call-cta-btn"
                           onClick={() => track("alt_cta_click", { event_category: "cta_alt" })}
                           style={{ margin: "0 auto", padding: "20px", fontSize: "1.25rem" }}
